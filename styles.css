@@ -1,0 +1,308 @@
+*{
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+body {
+    font-family: 'Pacifico';
+    display: flex;
+    justify-content: center;
+    background-color: lightblue;
+    background-color: #2B2B2B;
+    overflow: hidden;
+  }
+
+h1 {
+  font-size: 5vh;
+  font-family: fantasy;
+  animation: fade 1s linear 0s infinite;
+  color: #1a631d;
+  color: white;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-100%);
+  z-index: 3;
+  }
+
+  h2 {
+    font-size: 4vh;
+    font-family: fantasy;
+    color: white;
+    position: absolute;
+    font-weight: 500;
+    z-index: 4;
+    }
+
+  h3{
+    font-size: 2vh;
+    font-family: fantasy;
+    color: white;
+    position: absolute;
+    font-weight: 500;
+    z-index: 4;
+    left: 1%;
+  }
+
+@keyframes fade {
+  0% {opacity: 100;}
+  50% {opacity: 0;}
+  100% {opacity: 100;}
+}
+  
+.pipe{
+  background-color: green;
+  background-image: linear-gradient(-90deg, #00bb53, transparent);
+  position: absolute;
+  width: 75px;
+  height: 37vh;
+  right: -90px;
+}
+
+.pipe-edge{
+  background-color: rgb(86, 177, 86);
+  background-image: linear-gradient(-90deg, #00e968, transparent);
+  position: absolute;
+  width: 90px;
+  height: 3vh;
+  right: -7.5px
+}
+
+.top{
+  top:0;
+}
+
+.btm{
+  bottom: 0;
+}
+
+#player{
+  width: 60px;
+  height: 70px;
+  border-radius: 50%;
+  /* background-color: rgb(0, 162, 255); */
+  /* background-image: url("Assets/Ophir.png"); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  position: absolute;
+  left: 10vw;
+  top: calc(50% - 40px);
+  z-index: 3;
+}
+
+#graphs{
+  width: 150vw;
+  height: 50vh;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  animation: graphsMovement 20s linear infinite;
+  z-index: -1;
+  filter: blur(4px);
+}
+
+#graphsFlipped{
+  width: 150vw;
+  height: 50vh;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  animation: graphsMovementFlipped 20s linear infinite;
+  z-index: -1;
+  transform: translateX(99%) scale(-1, 1);
+  filter: blur(4px);
+}
+
+@keyframes graphsMovement {
+  0% {transform: translateX(0);}
+  100% {transform: translateX(-100%);}
+}
+
+@keyframes graphsMovementFlipped {
+  0% {transform: translateX(99%) scale(-1, 1);}
+  100% {transform: translateX(-1%) scale(-1, 1);}
+}
+
+#gameOverDiv{
+  background-color: red;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  opacity: 0;
+  position: absolute;
+}
+
+#counter{
+  top: 10%;
+}
+
+#highScoreLabel{
+  top: 20%;
+  font-size: 2.5vh;
+}
+
+
+.cloud {
+	width: 175px;
+  height: 60px;
+	background: #ffffff;
+	border-radius: 100px;
+	position: absolute;
+	margin: 150px 50px;
+  opacity: .5;
+  z-index: 0;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+  filter: blur(1px);
+  animation: cloud1 15s infinite linear;
+  top: 250px;
+}
+
+.cloud:after, .cloud:before {
+	content: '';
+	position: absolute;
+	background: #ffffff;
+	z-index: 1;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+}
+
+.cloud:after {
+	width: 50px; height: 50px;
+	top: -35px; left: 20px;
+	border-radius: 100px;
+} 
+.cloud:before  {
+	width: 90px; height: 90px;
+	top: -50px; right: 25px;
+	border-radius: 200px;
+}
+
+.cloud-2 {
+	width: 175px;
+  height: 60px;
+	background: #ffffff;
+	border-radius: 100px;
+	position: absolute;
+	margin: 150px 50px;
+  opacity: .5;
+  z-index: 0;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+  filter: blur(1px);
+  animation: cloud1 17s infinite linear;
+  top: 150px
+}
+
+.cloud-2:after, .cloud-2:before {
+	content: '';
+	position: absolute;
+	background: #ffffff;
+	z-index: 1;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+}
+
+.cloud-2:after {
+	width: 50px; height: 50px;
+	top: -35px; left: 20px;
+	border-radius: 100px;
+} 
+.cloud-2:before  {
+	width: 90px; height: 90px;
+	top: -50px; right: 25px;
+	border-radius: 200px;
+}
+
+
+.cloud-3 {
+	width: 116px;
+  height: 40px;
+	background: #ffffff;
+	border-radius: 100px;
+	position: absolute;
+	margin: 150px 50px;
+  opacity: .5;
+  z-index: 0;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+  filter: blur(1px);
+  animation: cloud1 23s -5s infinite linear;
+  top: -70px
+}
+
+
+.cloud-3:after, .cloud-3:before {
+	content: '';
+	position: absolute;
+	background: #ffffff;
+	z-index: 1;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+}
+
+.cloud-3:after {
+	width: 33px; height: 33px;
+	top: -10px; left: -2px;
+	border-radius: 100px;
+} 
+.cloud-3:before  {
+	width: 60px; height: 60px;
+	top: -20px; right: 25px;
+	border-radius: 200px;
+}
+
+.cloud-4 {
+	width: 175px;
+  height: 60px;
+	background: #ffffff;
+	border-radius: 100px;
+	position: absolute;
+	margin: 150px 50px;
+  opacity: .5;
+  z-index: 0;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+  filter: blur(1px);
+  animation: cloud1 28s -15s infinite linear;
+  top: 20px
+}
+
+.cloud-4:after, .cloud-4:before {
+	content: '';
+	position: absolute;
+	background: #ffffff;
+	z-index: 1;
+  box-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
+}
+
+.cloud-4:after {
+	width: 50px; height: 50px;
+	top: -35px; left: 20px;
+	border-radius: 100px;
+} 
+.cloud-4:before  {
+	width: 90px; height: 90px;
+	top: -50px; right: 25px;
+	border-radius: 200px;
+}
+
+
+.cloud-text {
+  z-index: 2;
+  position: absolute;
+  top: -15px;
+  right: 10px;
+  font-size: 2rem;
+}
+
+.ddos{
+  color: #bd4444;
+}
+
+.waf{
+  color: #4497bd;
+  right: 15px;
+}
+
+@keyframes cloud1 {
+  from {
+    transform: translateX(90vw);
+}
+to {
+  transform: translateX(-70vw);
+}
+}

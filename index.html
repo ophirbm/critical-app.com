@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Radware</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- <div class="pipe top">
+    <div class="pipe-edge btm"></div>
+</div>
+<div class="pipe btm">
+    <div class="pipe-edge top"></div>
+</div> -->
+<div id="player"></div>
+<h1 id="tapLabel">Tap to Start</h1>
+<h2 id="highScoreLabel"></h2>
+<h3 id="mvp">Shift MVP: </h3>
+<h2 id="counter">0</h2>
+<img src="GraphsBG.png" id="graphs"/>
+<img src="GraphsBG.png" id="graphsFlipped"/>
+<div id="gameOverDiv"></div>
+<div class="cloud"><h2 class="cloud-text ddos">CLOUD DDoS</h2></div>
+<div class="cloud-2"><h2 class="cloud-text waf">CLOUD WAF </h2></div>
+<div class="cloud-3"><h2 class="cloud-text ddos"  style="font-size: 1.25rem;">CLOUD DDoS</h2></div>
+<div class="cloud-4"><h2 class="cloud-text waf">CLOUD WAF </h2></div>
+<script>
+if (!localStorage.getItem('highScore'))
+    localStorage.setItem('highScore', 0);
+let player = document.getElementById("player");
+var canTap = true;
+var jumpHeight = 100;
+var fallVelocity = 1;
+var jumpInt;
+var jumpVelocity = 12;
+var jumpStartPos;
+var jumpLimit = 85;
+var isJumping = false;
+let tapLabel = document.getElementById("tapLabel");
+let highScoreLabel = document.getElementById("highScoreLabel");
+let mvpLabel = document.getElementById("mvp");
+var gameStarted = false;
+var randomGap = 0;
+var pipes = [];
+var scoreFlags = [];
+var score = 0;
+var highScore;
+let counter = document.getElementById("counter");
+let redScreen = document.getElementById("gameOverDiv");
+let redOpacity = 0;
+let players = ["Ophir", "Miron", "Nizan", "Sagi", "Emanuel", "Gedalia", "Omer", "Mika", "Omri", "Chupapi", "GalOr", "Tomer"];
+let lastPlayer;
+var currentPlayer;
+let veryFirstTime = true;
+document.onclick = tap;
+document.onkeypress = function(e) {
+if (e.key == "g" || e.key == "G") {
+    gameOver();
+}
+else if (e.key == "r" || e.key == "R") {
+    restart();
+}
+else if (e.key == " " || e.code == "Space" || e.keyCode == 32){
+    tap();
+}
+else if (e.key == "s" || e.key == "S") {
+    chooseNextPlayer();
+}
+}
+
+highScoreLabel.hidden = true;
+
+let moveInt;
+let generateInt;
+let fallInt;
+let checkPipesInt;
+let redInt;
+
+choosePlayer();
+
+function gameOver(){
+    clearInterval(moveInt);
+    clearInterval(generateInt);
+    clearInterval(fallInt);
+    clearInterval(checkPipesInt)
+    tapLabel.hidden = false;
+    gameStarted = false;
+    redScreen.style.opacity = 1;
+    redOpacity = 1;
+    redInt = setInterval(reduceOpacity, 10);
+    // if (highScore == null)
+    // highScore=score;
+    // else
+    localStorage.setItem('highScore', Math.max(Number(localStorage.getItem('highScore')), score));
+    highScoreLabel.innerHTML = "High Score: " + localStorage.getItem('highScore');
+    highScoreLabel.hidden = false;
+    canTap = false;
+    setTimeout(() => {
+        canTap = true;
+    }, 1250);
+}
+
+// function restart(){
+//     moveInt = setInterval(movePipes, 10);
+//     generateInt = setInterval(generatePipes, 2500);
+// }
+
+function movePipes(){
+    var velocity = 2;
+    var pipes = document.getElementsByClassName("pipe");
+    for (let i = 0; i < pipes.length; i++) {
+        pipes[i].style.right = Number(getComputedStyle(pipes[i]).right.replace("px","")) + velocity + "px";        
+    }
+}
+
+function generatePipes(){
+    //Top Pipe
+    var topPipe = document.createElement('div');
+    topPipe.className = "pipe top";
+    var topPipeEdge = document.createElement('div');
+    topPipeEdge.className = "pipe-edge btm";
+    topPipe.appendChild(topPipeEdge);
+    //Bottom Pipe
+    var btmPipe = document.createElement('div');
+    btmPipe.className = "pipe btm";
+    var btmPipeEdge = document.createElement('div');
+    btmPipeEdge.className = "pipe-edge top";
+    btmPipe.appendChild(btmPipeEdge);
+    document.body.appendChild(topPipe);
+    document.body.appendChild(btmPipe);
+    randomGap = Math.floor(Math.random()*35);
+    var negative = Math.floor(Math.random()*2);
+    if (negative == 0){
+        randomGap*=-1;
+    }
+    topPipe.style.height = (37 + randomGap) + "vh";
+    btmPipe.style.height = (37 - randomGap) + "vh";
+    pipes.push(topPipe);
+    pipes.push(btmPipe);
+}
+
+function fall(){
+    if (!isJumping && gameStarted){
+        fallVelocity += 0.15;
+        player.style.top = Number(getComputedStyle(player).top.replace("px","")) + fallVelocity + "px";
+    }
+    if (Number(getComputedStyle(player).top.replace("px",""))>=window.innerHeight){
+        gameOver();
+    }
+}
+
+function tap(){
+    if (canTap){
+        if (!gameStarted){
+            removeAllPipes();
+            generatePipes();
+            score=0;
+            counter.innerHTML = score;
+            gameStarted = true;
+            tapLabel.hidden = true;
+            highScoreLabel.hidden = true;
+            moveInt = setInterval(movePipes, 10);
+            generateInt = setInterval(generatePipes, 2500);
+            fallInt = setInterval(fall, 10);
+            checkPipesInt = setInterval(checkPipes, 10);
+            if (!veryFirstTime)
+                choosePlayer();
+            else
+                veryFirstTime = false;
+            setPlayerPosition();
+        }
+        if (!isJumping){
+        console.log("tapped");
+        jumpStartPos = Number(getComputedStyle(player).top.replace("px",""));
+        isJumping = true;
+        jumpInt = setInterval(jump, 10);
+        fallVelocity = 1;
+        }
+        else{
+            clearInterval(jumpInt);
+            console.log("tapped");
+            jumpStartPos = Number(getComputedStyle(player).top.replace("px",""));
+            isJumping = true;
+            jumpInt = setInterval(jump, 10);
+            fallVelocity = 1;
+        }
+    }
+}
+
+
+function setPlayerPosition(){
+    player.style.left = "10vw";
+    player.style.top = "calc(50% - 40px)";
+}
+
+function jump(){
+    if (canTap){
+        if (Number(getComputedStyle(player).top.replace("px","")) < jumpStartPos - jumpLimit){
+        clearInterval(jumpInt);
+        isJumping = false;
+    }
+    else if (Number(getComputedStyle(player).top.replace("px","")) < jumpStartPos - (jumpLimit/4*3)){
+        player.style.top = Number(getComputedStyle(player).top.replace("px","")) - jumpVelocity/4 + "px";
+    }
+    else if (Number(getComputedStyle(player).top.replace("px","")) < jumpStartPos - (jumpLimit/3*2)){
+        player.style.top = Number(getComputedStyle(player).top.replace("px","")) - jumpVelocity/3 + "px";
+    }
+    else if (Number(getComputedStyle(player).top.replace("px","")) < jumpStartPos - (jumpLimit/2)){
+        player.style.top = Number(getComputedStyle(player).top.replace("px","")) - jumpVelocity/2 + "px";
+    }
+    else{
+        player.style.top = Number(getComputedStyle(player).top.replace("px","")) - jumpVelocity + "px";
+    }}
+}
+
+function checkPipes(){
+    if (canTap){
+    for (let i = 0; i < pipes.length-1; i+=2) {
+            //Removing old pipes
+        if (Number(getComputedStyle(pipes[i]).right.replace("px","") >= window.innerWidth)){
+            // document.body.removeChild(pipes[i]);
+            // document.body.removeChild(pipes[i+1]);
+            pipes.reverse();
+            document.body.removeChild(pipes.pop());
+            document.body.removeChild(pipes.pop());
+            pipes.reverse();
+        }
+        //Score
+        if (Number(getComputedStyle(player).right.replace("px","")) <= Number(getComputedStyle(pipes[i]).right.replace("px","")) + pipes[i].clientWidth &&
+            Number(getComputedStyle(player).right.replace("px","")) + player.clientWidth >= Number(getComputedStyle(pipes[i]).right.replace("px",""))){
+            if (Number(getComputedStyle(player).top.replace("px","")) <= Number(getComputedStyle(pipes[i]).top.replace("px","")) + pipes[i].clientHeight || Number(getComputedStyle(player).top.replace("px","")) + player.clientHeight >= Number(getComputedStyle(pipes[i+1]).top.replace("px",""))){
+                gameOver();
+            }
+        }
+        if (Number(getComputedStyle(player).right.replace("px","")) + player.clientWidth <= Number(getComputedStyle(pipes[i]).right.replace("px",""))){
+            if (!pipes[i].className.includes("passed")){
+                    score++;
+                    counter.innerHTML = score;
+                    pipes[i].className+=" passed"
+                    //choosePlayer();
+                }
+            }
+    }}
+}
+
+function reduceOpacity(){
+    redOpacity -= 0.05;
+    redScreen.style.opacity = redOpacity;
+    if (redOpacity<=0)
+        clearInterval(redInt);
+}
+
+function removeAllPipes(){
+    var length = pipes.length;
+    for (let i = 0; i < length; i++) {
+        document.body.removeChild(pipes.pop());
+    }
+}
+
+function choosePlayer(){
+    currentPlayer = players[Math.floor(Math.random()*players.length)];
+    if (lastPlayer){
+        while (lastPlayer==currentPlayer){
+            currentPlayer = players[Math.floor(Math.random()*players.length)];
+        }
+    }
+    player.style.backgroundImage = "url('Assets/" + currentPlayer + ".png')";
+    lastPlayer = currentPlayer;
+    mvpLabel.innerText = "Shift MVP: " + currentPlayer;
+}
+
+function chooseNextPlayer(){
+    for (let i = 0; i < players.length; i++) {
+        if (currentPlayer == players[i]){
+            if (i == players.length-1)
+                currentPlayer = players[0];
+            else
+            currentPlayer = players[i+1];
+        }
+        
+    }
+    currentPlayer = players[Math.floor(Math.random()*players.length)];
+    player.style.backgroundImage = "url('Assets/" + currentPlayer + ".png')";
+    mvpLabel.innerText = "Shift MVP: " + currentPlayer;
+}
+
+function moveBG(){
+    
+}
+
+// window.addEventListener("blur", gameOver);
+// window.addEventListener("focus", restart);
+
+</script>
+</body>
+</html>
