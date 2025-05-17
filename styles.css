@@ -298,6 +298,14 @@ h1 {
   right: 15px;
 }
 
+.gre{
+  margin: 0;
+  font-size: 1.5rem;
+  font-family: fantasy;
+  text-align: center;
+  color: darkgreen;
+}
+
 @keyframes cloud1 {
   from {
     transform: translateX(90vw);
