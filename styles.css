@@ -141,6 +141,11 @@ h1 {
   font-size: 2.5vh;
 }
 
+#switchLabel{
+  top: 52%;
+  font-size: 2vh;
+  color: rgb(158, 158, 158);
+}
 
 .cloud {
 	width: 175px;
