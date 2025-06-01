@@ -15,6 +15,7 @@
 </div> -->
 <div id="player"></div>
 <h1 id="tapLabel">Tap to Start</h1>
+<h2 id="switchLabel">*Tap 'S' to switch character</h2>
 <h2 id="highScoreLabel"></h2>
 <h3 id="mvp">Shift MVP: </h3>
 <h2 id="counter">0</h2>
@@ -38,6 +39,7 @@ var jumpStartPos;
 var jumpLimit = 85;
 var isJumping = false;
 let tapLabel = document.getElementById("tapLabel");
+let switchLabel = document.getElementById("switchLabel");
 let highScoreLabel = document.getElementById("highScoreLabel");
 let mvpLabel = document.getElementById("mvp");
 var gameStarted = false;
@@ -49,7 +51,7 @@ var highScore;
 let counter = document.getElementById("counter");
 let redScreen = document.getElementById("gameOverDiv");
 let redOpacity = 0;
-let players = ["Ophir", "Miron", "Nizan", "Sagi", "Emanuel", "Gedalia", "Omer", "Mika", "Omri", "Chupapi", "GalOr", "Tomer", "Aner", "Ben", "GalE", "GuyK", "GuyP", "Shay Bar", "Nir"];
+let players = ["Ophir", "Miron", "Nizan", "Sagi", "Emanuel", "Gedalia", "Omer", "Mika", "Omri", "Chupapi", "GalOr", "Tomer", "Aner", "Ben", "GalE", "GuyK", "GuyP", "Shay Bar", "Nir", "yuval"];
 let lastPlayer;
 var currentPlayer;
 let veryFirstTime = true;
@@ -168,6 +170,7 @@ function tap(){
             counter.innerHTML = score;
             gameStarted = true;
             tapLabel.hidden = true;
+            switchLabel.hidden = true;
             highScoreLabel.hidden = true;
             moveInt = setInterval(movePipes, 10);
             generateInt = setInterval(generatePipes, 2500);
